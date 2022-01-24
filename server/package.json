@@ -1,0 +1,33 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "demo blog application",
+  "main": "Index.js",
+  "scripts": {
+    "start": "node Index.js",
+    "client": "cd ../client && npm start",
+    "server": "nodemon Index.js",
+    "clientinstall": "npm install --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client"
+  },
+  "author": "Mavi",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
+    "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.4",
+    "multer": "^1.4.2",
+    "nodemon": "^2.0.6",
+    "path": "^0.12.7",
+    "uuidv4": "^6.2.6"
+  }
+}

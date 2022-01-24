@@ -1,0 +1,11 @@
+GET  http://localhost:8000/
+
+###
+
+POST http://localhost:8001/writeblog
+content-type: application/json
+
+{
+    "title": "bad apple",
+    "blog": "this is apple"
+}
