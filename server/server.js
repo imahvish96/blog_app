@@ -3,8 +3,8 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
-const authRouter = require('./Routes/auth.routes');
-const postRouter = require('./Routes/post.routes');
+const authRouter = require('./routes/auth.routes');
+const postRouter = require('./routes/post.routes');
 const { PORT } = require('./constants');
 
 
