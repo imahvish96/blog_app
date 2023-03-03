@@ -2,11 +2,11 @@
   "name": "blog",
   "version": "1.0.0",
   "description": "demo blog application",
-  "main": "Index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node Index.js",
+    "start": "node server.js",
     "client": "cd ../client && npm start",
-    "server": "nodemon Index.js",
+    "watch": "nodemon server.js",
     "clientinstall": "npm install --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client"
   },
