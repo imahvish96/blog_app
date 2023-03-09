@@ -1,11 +1,7 @@
 const Post = require('../models/post.model');
 const Blogs = require('../models/post.model');
+const { BASE_URL, SUCCESS_ON_POST } = require('../constants') 
 
-/**
- * to get blog_post 
- * @param {*} req 
- * @param {*} res 
- */
 const getPosts = (req, res) => {
   Post.find()
     .then((post) => res.status(200).json(post))
@@ -13,19 +9,16 @@ const getPosts = (req, res) => {
 };
 
 const savePost = (req, res) => {
-    let { title, blog } = req.body;
-    let Newthumb = req.file.destination + '/' + req.file.filename;
-    let thumb = Newthumb.replace('./public/', '');
-    let url = 'http://localhost:4000/' + thumb;
-    // let url = 'http://localhost:4000/' + newThumb
-    let Posts = new Post({ title, blog, url });
-    Posts.save((err) => {
-      if (err) {
-        return err;
-      }
-      res.send(console.log(Posts));
+    const { title, post } = req.body;
+    const tags = req.body.tags.split(','); 
+    const coverPath = req.file.destination + '/' + req.file.filename;
+    const url = BASE_URL + coverPath.replace('./public/', '');
+    new Post({title, post, tags, url}).save((err) => {
+      if (err) res.status(500).json(err);
+      res.status(200).json({Success: SUCCESS_ON_POST})
     });
   }
+
 
 const getPostById = async (req, res) => {
   let SingleBlog = await Blogs.findById(req.params.id);

@@ -7,9 +7,12 @@ const postSchema = new Schema({
     type: String,
     required: true
   },
-  blog: {
+  post: {
     type: String,
     required: true
+  },
+  tags: {
+    type: Array,
   },
   url: {
     type: String,

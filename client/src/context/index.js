@@ -1,6 +1,8 @@
-import { createContext, useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import axios from 'axios';
+import { createContext, useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import axios from "axios";
+
+import { fetchAllPostApi } from "../api";
 
 export const BlogContext = createContext();
 
@@ -8,45 +10,37 @@ export const BlogContextProvider = (props) => {
   const history = useHistory();
 
   const initialState = {
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   };
 
   const [posts, setPosts] = useState([]);
   const [post, setPost] = useState([]);
   const [state, setState] = useState(initialState);
-  const [token, setToken] = useState('');
-  const [isLogin, setIsLogin] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState("");
+  const [isLogin, setIsLogin] = useState(localStorage.getItem("token"));
   const [isToken, setIsToken] = useState(null);
 
-  useEffect(() => {
-    axios.get('/api').then((res) => {
-      const posts = res.data;
-      setPosts(posts);
-    });
-  }, []);
+  const fetchPosts = async () => {
+    const allPost = await fetchAllPostApi();
+    setPosts(allPost);
+  };
 
   useEffect(() => {
-    axios.get(`/api/${localStorage.getItem('pidt')}`).then((res) => {
-      const singleBlog = res.data;
-      setPost(singleBlog);
-    });
+    fetchPosts();
   }, []);
 
   // useEffect(() => {
   //   const isAuth = localStorage.getItem('token');
   //   if (isAuth && isAuth !== undefined) {
-  //     history.push('/api');
+  //     history.push('/');
   //   }
   // }, []);
 
   const handelDetail = (id) => {
-    const post = posts.find((item) => {
-      return item._id === id;
-    });
-    localStorage.setItem('pidt', post._id);
+    const post = posts.find((item) => item._id === id);
+    localStorage.setItem("pidt", post._id);
     setPost(post);
-    return post;
   };
 
   const handelChange = (e) => {
@@ -74,21 +68,37 @@ export const BlogContextProvider = (props) => {
   const handelSignOut = async (e) => {
     e.preventDefault();
     await axios
-      .get('/api/logout')
+      .get("/logout")
       .then((res) => {
-        setIsToken(localStorage.removeItem('token'));
+        setIsToken(localStorage.removeItem("token"));
         // localStorage.removeItem('token');
-        history.push('/api/login');
+        history.push("/login");
       })
       .catch((error) => console.error(error));
 
-    const logedOut = localStorage.getItem('token');
+    const logedOut = localStorage.getItem("token");
     if (logedOut === null) setIsLogin(false);
   };
 
   useEffect(() => {
-    setIsToken(localStorage.getItem('token'));
+    setIsToken(localStorage.getItem("token"));
   }, [isToken]);
 
-  return <BlogContext.Provider value={{ posts, handelDetail, post, handelChange, state, setState, handelSignOut, isLogin, setIsLogin }}>{props.children}</BlogContext.Provider>;
+  return (
+    <BlogContext.Provider
+      value={{
+        posts,
+        handelDetail,
+        post,
+        handelChange,
+        state,
+        setState,
+        handelSignOut,
+        isLogin,
+        setIsLogin,
+      }}
+    >
+      {props.children}
+    </BlogContext.Provider>
+  );
 };

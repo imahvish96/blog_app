@@ -5,7 +5,7 @@ const { upload } = require('../utils')
 const postRouter = Router();
 
 postRouter.get('/', getPosts);
-postRouter.post('/newpost', upload.single('file'), savePost);
+postRouter.post('/newpost', upload.single('coverImage'), savePost);
 postRouter.get('/:id', getPostById);
 
 module.exports = postRouter;
