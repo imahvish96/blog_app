@@ -14,6 +14,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { BlogContext } from "../../../context";
 import { useHistory } from "react-router-dom";
+import { getLogedIn } from "../../../api";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,26 +25,18 @@ const useStyles = makeStyles((theme) => ({
     mt: {
       marginTop: "10px",
     },
+    paper: {
+      background: "#fff",
+      padding: "8px",
+    },
   },
 }));
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>
-      {new Date().getFullYear()}
-    </Typography>
-  );
-}
-
 export default function Login(props) {
   const classes = useStyles();
-  const { handelChange, state, setIsLogin, isLogin } =
-    React.useContext(BlogContext);
+  const { handelChange, state } = React.useContext(BlogContext);
   const [token, setToken] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -53,89 +46,97 @@ export default function Login(props) {
     }
   }, []);
 
-  const handelSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    axios
-      .post("/login", { ...state })
-      .then((res) => {
-        setToken(res.data.token);
-        localStorage.setItem("token", res.data.token);
-        props.history.push("/writeblog");
-        setIsLogin(true);
-      })
-      .catch((err) => console.error(err));
-    if (localStorage.getItem("token") !== null && undefined)
-      setIsLogin(!isLogin);
+    const isLogin = await getLogedIn(state);
+    setToken(isLogin.token);
+    localStorage.setItem("token", isLogin.token);
+    props.history.push("/");
+    setIsLogin(true);
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <form
-          className={classes.form}
-          noValidate
-          method="POST"
-          onSubmit={handelSubmit}
-        >
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-            value={state.email}
-            onChange={handelChange}
-          />
-          <TextField
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={state.password}
-            onChange={handelChange}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign In
-          </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link to="#" variant="body2">
-                Forgot password?
-              </Link>
+    <Container
+      component="main"
+      maxWidth="600px"
+      style={{
+        width: "500px",
+        height: "413px",
+        maxHeight: "413px",
+        padding: "24px",
+      }}
+    >
+      <div
+        className={classes.paper}
+        style={{
+          background: "#fff",
+          borderRadius: "10px",
+          padding: "25px",
+          boxSizing: "border-box",
+          border: "1px solid #eee",
+        }}
+      >
+        <Box>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              value={state.email}
+              onChange={handelChange}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={state.password}
+              onChange={handelChange}
+            />
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              style={{ margin: "10px 0" }}
+              onClick={handleLogin}
+            >
+              Sign In
+            </Button>
+            <Grid container style={{ marginTop: "15px" }}>
+              <Grid item xs>
+                <Link to="#" variant="body2">
+                  Forgot password?
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link to="signup" variant="body2">
+                  {"Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Link to="signup" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
+          </form>
+        </Box>
       </div>
-      <Box mt={8}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }

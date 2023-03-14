@@ -13,6 +13,14 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import {
+  FaGoogle,
+  FaMicrosoft,
+  FaApple,
+  FaTwitter,
+  FaGithub,
+} from "react-icons/fa";
+import { oneLogin } from "../../../config";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,13 +77,81 @@ export default function SignUp() {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container
+      component="main"
+      style={{
+        width: "500px",
+        margin: "24px auto",
+        padding: "0px",
+      }}
+    >
       <CssBaseline />
-      <div className={classes.paper}>
-        <Typography component="h1" variant="h5">
-          Sign up
+      <div
+        className={classes.paper}
+        style={{
+          background: "#fff",
+          borderRadius: "10px",
+          padding: "25px",
+          boxSizing: "border-box",
+          border: "1px solid #eee",
+        }}
+      >
+        <Typography component="h1" variant="h5" style={{ marginBottom: "5px" }}>
+          Welcome to DeV Community
         </Typography>
-        <form method="POST" className={classes.form} noValidate>
+        <Typography
+          component="h1"
+          variant="body2"
+          style={{ marginBottom: "18px" }}
+        >
+          DEV Community is a community of 1,023,907 amazing developers
+        </Typography>
+
+        <Box mb={3}>
+          {oneLogin.map((item) => (
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+              style={{
+                margin: "10px 0",
+                textTransform: "none",
+                display: "flex",
+                alignItems: "center",
+                ...item.style,
+              }}
+            >
+              <Box
+                component="span"
+                style={{
+                  marginRight: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <item.icon />
+              </Box>
+              <Box
+                component="span"
+                style={{ textAlign: "left", width: "160px" }}
+              >{`Continue with ${item.text}`}</Box>
+            </Button>
+          ))}
+          <Typography
+            component="h1"
+            variant="body2"
+            style={{
+              margin: "12px 0",
+              textAlign: "center",
+            }}
+          >
+            Have a password? Continue with your email address
+          </Typography>
+        </Box>
+        <form className={classes.form} noValidate>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -123,12 +199,6 @@ export default function SignUp() {
                 autoComplete="current-password"
               />
             </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -136,21 +206,19 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            style={{ margin: "15px 0", textTransform: "none" }}
           >
             Sign Up
           </Button>
-          <Grid container justify="flex-end">
+          <Grid container justify="flex-end" style={{ marginTop: "10px" }}>
             <Grid item>
-              <Link to="login" variant="body2">
+              <Link to="signin" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
           </Grid>
         </form>
       </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
     </Container>
   );
 }

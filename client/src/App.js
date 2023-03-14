@@ -23,7 +23,7 @@ const App = () => {
         <Route exact path="/" component={Home} />
         <Route path={`/${_id}`} component={Read} />
         <Privateroute component={Write} exact path="/writeblog" />
-        <Route exact path="/login" component={SignIn} />
+        <Route exact path="/signin" component={SignIn} />
         <Route exact path="/signup" component={SignUp} />
       </Switch>
       <Footer />

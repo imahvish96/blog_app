@@ -35,7 +35,7 @@ export default function BlogCard({ post, title, path, id }) {
             height="140"
             image={`${path}`}
             title={path}
-            style={{ height: "150px" }}
+            style={{ height: "265px" }}
           />
           <CardContent>
             <UserAvtar />

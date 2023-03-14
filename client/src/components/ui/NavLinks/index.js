@@ -1,6 +1,7 @@
 import React from "react";
 import { Box } from "@material-ui/core";
 import useStyle from "./style";
+// import Home from "../../../assets/icons/nav/png/Home.png";
 
 function NavLinks({ menu }) {
   const classes = useStyle();
@@ -17,7 +18,13 @@ function NavLinks({ menu }) {
                   gap: "8px",
                 }}
               >
-                <tag.icon style={{ fontSize: "20px" }} />
+                <Box component="span" style={{ width: "25px", height: "25px" }}>
+                  <img
+                    src={tag.icon}
+                    alt={tag.icon}
+                    style={{ width: "100%" }}
+                  />
+                </Box>
                 {tag.menuTitle}
               </Box>
             </a>

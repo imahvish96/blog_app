@@ -96,6 +96,7 @@ export const BlogContextProvider = (props) => {
         handelSignOut,
         isLogin,
         setIsLogin,
+        fetchPosts,
       }}
     >
       {props.children}

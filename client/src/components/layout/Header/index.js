@@ -16,11 +16,14 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import useStyles from "./style";
 import { Container } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { BlogContext } from "../../../context";
+import { signOut } from "../../../api";
 
 export default function Header() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const { isLogin } = React.useContext(BlogContext);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -33,9 +36,11 @@ export default function Header() {
     setMobileMoreAnchorEl(null);
   };
 
-  const handleMenuClose = () => {
+  const handleMenuClose = async () => {
     setAnchorEl(null);
     handleMobileMenuClose();
+    const res = await signOut();
+    console.log(res);
   };
 
   const handleMobileMenuOpen = (event) => {
@@ -55,6 +60,7 @@ export default function Header() {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Sign Out</MenuItem>
     </Menu>
   );
 
@@ -124,34 +130,51 @@ export default function Header() {
               />
             </div>
             <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              <Button
-                variant="outlined"
-                style={{
-                  textTransform: "none",
-                }}
-              >
-                Creat Post
-              </Button>
-              <IconButton
-                aria-label="show 17 new notifications"
-                color="inherit"
-              >
-                <Badge badgeContent={17} color="secondary">
-                  <NotificationsIcon style={{ color: "#000" }} />
-                </Badge>
-              </IconButton>
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <AccountCircle style={{ color: "#000" }} />
-              </IconButton>
-            </div>
+            {isLogin ? (
+              <div className={classes.sectionDesktop}>
+                <Link to="/writeblog">
+                  <Button
+                    variant="outlined"
+                    style={{
+                      textTransform: "none",
+                    }}
+                  >
+                    Creat Post
+                  </Button>
+                </Link>
+                <IconButton
+                  aria-label="show 17 new notifications"
+                  color="inherit"
+                >
+                  <Badge badgeContent={17} color="secondary">
+                    <NotificationsIcon style={{ color: "#000" }} />
+                  </Badge>
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <AccountCircle style={{ color: "#000" }} />
+                </IconButton>
+              </div>
+            ) : (
+              <div className={classes.sectionDesktop}>
+                <Link to="/signin">
+                  <Button
+                    variant="outlined"
+                    style={{
+                      textTransform: "none",
+                    }}
+                  >
+                    Log In
+                  </Button>
+                </Link>
+              </div>
+            )}
             <div className={classes.sectionMobile}>
               <IconButton
                 aria-label="show more"

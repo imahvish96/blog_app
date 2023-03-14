@@ -6,6 +6,7 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import useStyles from "./style";
 
 function LoginCard() {
@@ -29,14 +30,30 @@ function LoginCard() {
         </Typography>
       </CardContent>
       <CardActions style={{ justifyContent: "center" }}>
-        <Button size="medium" color="primary" variant="outlined" style={{textTransform:'none'}}>
-          Create New Account
-        </Button>
+        <Link to="/signup">
+          <Button
+            size="medium"
+            color="primary"
+            variant="outlined"
+            style={{ textTransform: "none" }}
+          >
+            Create New Account
+          </Button>
+        </Link>
       </CardActions>
       <CardActions style={{ justifyContent: "center" }}>
-        <Button size="small" style={{textTransform:'none', fontSize:'16px', padding:'0px 8px 8px'}}>
-          Log In
-        </Button>
+        <Link to="signin">
+          <Button
+            size="small"
+            style={{
+              textTransform: "none",
+              fontSize: "16px",
+              padding: "0px 8px 8px",
+            }}
+          >
+            Log In
+          </Button>
+        </Link>
       </CardActions>
     </Card>
   );
