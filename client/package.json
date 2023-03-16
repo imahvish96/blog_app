@@ -20,6 +20,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
     "redux": "^4.0.5",
+    "uuid": "^9.0.0",
+    "uuidv4": "^5.0.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

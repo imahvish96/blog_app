@@ -7,11 +7,11 @@ import { BlogContextProvider } from "./context";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BlogContextProvider>
-      <Router>
+    <Router>
+      <BlogContextProvider>
         <App />
-      </Router>
-    </BlogContextProvider>
+      </BlogContextProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById("root")
 );

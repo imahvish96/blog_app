@@ -23,38 +23,75 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   let { email, password } = req.body;
   try {
+    const DAYS_30 = new Date().getDate() + 30;
     const Users = await User.findOne({ email });
     if (!Users) res.status(404).json("Email or Password is invalid");
 
     const validPassword = await bcrypt.compare(password, Users.password);
     if (validPassword) {
-      const token = jwt.sign({ id: Users._id }, process.env.TOKEN_SECREAT, {
-        expiresIn: "30m",
-      });
-      res.cookie("OAuth_Token", token, {
-        domain: "http://localhost:3000",
+      const accessToken = jwt.sign(
+        { id: Users._id },
+        process.env.ACCESS_TOKEN_SECREAT,
+        {
+          expiresIn: "60s",
+        }
+      );
+      const refreshToken = jwt.sign(
+        { id: Users._id },
+        process.env.REFRESH_TOKEN_SECREAT,
+        {
+          expiresIn: "90d",
+        }
+      );
+      res.cookie("OAuth_Token", accessToken, {
         httpOnly: true,
-        expires: new Date(Date.now() + 1000 * 30),
+        expires: new Date(Date.now() + 1000 * 60),
         sameSite: "none",
         secure: true,
       });
-      return res.status(200).json({ token, message: "Success" });
+      res.cookie("Refresh_Token", refreshToken, {
+        httpOnly: true,
+        expires: new Date(Date.now() + 9000000),
+        sameSite: "none",
+        secure: true,
+      });
+      return res.status(200).json({
+        data: {
+          accessToken,
+          refreshToken,
+          message: "You are now logedin successfully",
+        },
+      });
     }
-    return res.status(401).json("Invalid Password");
+    return res.status(401).json({
+      data: {
+        error: "Unauthorized",
+        status_code: "401",
+        message: "Email or Password didn't match in our record",
+      },
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
+const refreshSession = (req, res) => {
+  const token = req.token;
+  res.status(200).json({ data: { succsss: "verifyed", token } });
+};
+
 const logout = (req, res) => {
   res.cookie("Oauth_token", "", {
-    expires: new Date(Date.now() + 1000 * 30),
+    expires: new Date(Date.now() + 1000),
   });
-  res.status(200).json({ Message: "Sing Out" });
+  res.cookie("Refresh_Token", "", {
+    expires: new Date(Date.now() + 1000),
+  });
 };
 
 module.exports = {
   login,
   signup,
   logout,
+  refreshSession,
 };

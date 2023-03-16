@@ -15,6 +15,7 @@ import { Link } from "react-router-dom";
 import { BlogContext } from "../../../context";
 import { useHistory } from "react-router-dom";
 import { getLogedIn } from "../../../api";
+import { v4 as uuidv4 } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,25 +35,22 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login(props) {
   const classes = useStyles();
-  const { handelChange, state } = React.useContext(BlogContext);
-  const [token, setToken] = useState("");
-  const [isLogin, setIsLogin] = useState(false);
+  const { handelChange, state, setAccessToken, setRefreshToken, setIsLogin } =
+    React.useContext(BlogContext);
   const history = useHistory();
-
-  useEffect(() => {
-    const isAuth = localStorage.getItem("token");
-    if (isAuth && isAuth !== undefined) {
-      history.push("/");
-    }
-  }, []);
-
   const handleLogin = async (e) => {
-    e.preventDefault();
-    const isLogin = await getLogedIn(state);
-    setToken(isLogin.token);
-    localStorage.setItem("token", isLogin.token);
-    props.history.push("/");
-    setIsLogin(true);
+    try {
+      const isLogin = await getLogedIn(state);
+      if (isLogin.data) {
+        setIsLogin(true);
+        setAccessToken(isLogin.data.accessToken);
+        setRefreshToken(isLogin.data.refreshToken);
+        localStorage.setItem("active_session", uuidv4());
+      }
+      history.push("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import "./App.css";
 import Home from "./components/pages/Home";
 import Header from "./components/layout/Header";
@@ -31,4 +31,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default withRouter(App);

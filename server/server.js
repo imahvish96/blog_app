@@ -1,3 +1,7 @@
+const fs = require("fs");
+const path = require("path");
+const http = require("http");
+const https = require("https");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -7,6 +11,11 @@ const cookieParser = require("cookie-parser");
 const authRouter = require("./routes/auth.routes");
 const postRouter = require("./routes/post.routes");
 const { PORT } = require("./constants");
+
+// const options = {
+//   key: fs.readFileSync(path.join(__dirname, "./sslcert/key.pem")),
+//   cert: fs.readFileSync(path.join(__dirname, "./sslcert/cert.pem")),
+// };
 
 const app = express();
 
@@ -24,6 +33,8 @@ app.use(express.static("public"));
 app.use("/auth", authRouter);
 app.use("/blogpost", postRouter);
 
+// const server = https.createServer(options, app);
+
 mongoose.connect(
   process.env.COMPASS_URI,
   {
@@ -35,6 +46,6 @@ mongoose.connect(
     error
       ? console.error(error)
       : app.listen(PORT, () => {
-          console.log("Server Is Running");
+          console.log("Server Is Running" + " " + PORT);
         })
 );

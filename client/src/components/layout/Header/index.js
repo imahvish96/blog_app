@@ -24,7 +24,6 @@ export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const { isLogin } = React.useContext(BlogContext);
-
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -40,7 +39,6 @@ export default function Header() {
     setAnchorEl(null);
     handleMobileMenuClose();
     const res = await signOut();
-    console.log(res);
   };
 
   const handleMobileMenuOpen = (event) => {

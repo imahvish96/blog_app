@@ -1,14 +1,14 @@
-import { createContext, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import React, { createContext, useState, useEffect } from "react";
+import { useHistory } from "react-router";
 import axios from "axios";
+import { v4 as uuidv4 } from "uuid";
 
-import { fetchAllPostApi } from "../api";
+import { fetchAllPostApi, getRefreshToken } from "../api";
 
 export const BlogContext = createContext();
 
 export const BlogContextProvider = (props) => {
   const history = useHistory();
-
   const initialState = {
     email: "",
     password: "",
@@ -17,25 +17,47 @@ export const BlogContextProvider = (props) => {
   const [posts, setPosts] = useState([]);
   const [post, setPost] = useState([]);
   const [state, setState] = useState(initialState);
-  const [token, setToken] = useState("");
-  const [isLogin, setIsLogin] = useState(localStorage.getItem("token"));
-  const [isToken, setIsToken] = useState(null);
+  const [accessToken, setAccessToken] = useState("");
+  const [refreshToken, setRefreshToken] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
+
+  const activeSession = localStorage.getItem("active_session");
 
   const fetchPosts = async () => {
     const allPost = await fetchAllPostApi();
     setPosts(allPost);
   };
 
+  const isSessionExpires = async () => {
+    try {
+      if (activeSession) {
+        const isSession = await getRefreshToken();
+        setIsLogin(true);
+        setAccessToken(isSession.data.token);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    fetchPosts();
+    if (activeSession) {
+      localStorage.setItem("active_session", uuidv4());
+      setIsLogin(true);
+    } else {
+      history.push("/signin");
+    }
   }, []);
 
-  // useEffect(() => {
-  //   const isAuth = localStorage.getItem('token');
-  //   if (isAuth && isAuth !== undefined) {
-  //     history.push('/');
-  //   }
-  // }, []);
+  useEffect(() => {
+    fetchPosts();
+    const interval = setInterval(() => {
+      isSessionExpires();
+    }, 30000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [isLogin, activeSession]);
 
   const handelDetail = (id) => {
     const post = posts.find((item) => item._id === id);
@@ -51,27 +73,11 @@ export const BlogContextProvider = (props) => {
     });
   };
 
-  // const handelSubmit = (e) => {
-  //   e.preventDefault();
-  //   axios
-  //     .post('/api/login', { ...state })
-  //     .then((res) => {
-  //       setToken(res.data.token);
-  //       localStorage.setItem('token', res.data.token);
-  //       props.history.push('/api/writeblog');
-  //       // setIsLogin(!isLogin);
-  //     })
-  //     .catch((err) => console.error(err));
-  //   console.log('hello');
-  // };
-
   const handelSignOut = async (e) => {
     e.preventDefault();
     await axios
       .get("/logout")
       .then((res) => {
-        setIsToken(localStorage.removeItem("token"));
-        // localStorage.removeItem('token');
         history.push("/login");
       })
       .catch((error) => console.error(error));
@@ -79,10 +85,6 @@ export const BlogContextProvider = (props) => {
     const logedOut = localStorage.getItem("token");
     if (logedOut === null) setIsLogin(false);
   };
-
-  useEffect(() => {
-    setIsToken(localStorage.getItem("token"));
-  }, [isToken]);
 
   return (
     <BlogContext.Provider
@@ -97,6 +99,10 @@ export const BlogContextProvider = (props) => {
         isLogin,
         setIsLogin,
         fetchPosts,
+        setAccessToken,
+        accessToken,
+        setRefreshToken,
+        refreshToken,
       }}
     >
       {props.children}

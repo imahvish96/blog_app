@@ -4,12 +4,12 @@ const {
   savePost,
   getPostById,
 } = require("../controller/post.controller");
+const { verifyUser, verifyToken, refreshToken } = require("../middleware");
 const { upload } = require("../utils");
-const { verifyUser } = require("../middleware");
 
 const postRouter = Router();
 
-postRouter.get("/", verifyUser, getPosts);
+postRouter.get("/", verifyToken, getPosts);
 postRouter.post("/newpost", upload.single("coverImage"), savePost);
 postRouter.get("/:id", getPostById);
 
