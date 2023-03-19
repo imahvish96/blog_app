@@ -24,8 +24,13 @@ export const BlogContextProvider = (props) => {
   const activeSession = localStorage.getItem("active_session");
 
   const fetchPosts = async () => {
-    const allPost = await fetchAllPostApi();
-    setPosts(allPost);
+    try {
+      const allPost = await fetchAllPostApi();
+      setPosts(allPost);
+    } catch (error) {
+      localStorage.clear();
+      history.push("/signin");
+    }
   };
 
   const isSessionExpires = async () => {
@@ -73,19 +78,6 @@ export const BlogContextProvider = (props) => {
     });
   };
 
-  const handelSignOut = async (e) => {
-    e.preventDefault();
-    await axios
-      .get("/logout")
-      .then((res) => {
-        history.push("/login");
-      })
-      .catch((error) => console.error(error));
-
-    const logedOut = localStorage.getItem("token");
-    if (logedOut === null) setIsLogin(false);
-  };
-
   return (
     <BlogContext.Provider
       value={{
@@ -95,7 +87,6 @@ export const BlogContextProvider = (props) => {
         handelChange,
         state,
         setState,
-        handelSignOut,
         isLogin,
         setIsLogin,
         fetchPosts,

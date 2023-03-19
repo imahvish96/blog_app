@@ -12,11 +12,19 @@ const signup = async (req, res) => {
     email,
     password: hashpassword,
   });
+  const { password: pass, ...user } = Users;
   try {
     await Users.save();
-    res.status(201).json({ message: "User created successfully" });
+    res.status(201).json({
+      data: {
+        message: "User created successfully",
+        status_code: "201",
+        userInfo: user,
+      },
+    });
   } catch (error) {
-    res.status(500);
+    console.error(error);
+    res.status(500).json({ message: error, status_code: "500" });
   }
 };
 
@@ -25,7 +33,10 @@ const login = async (req, res) => {
   try {
     const DAYS_30 = new Date().getDate() + 30;
     const Users = await User.findOne({ email });
-    if (!Users) res.status(404).json("Email or Password is invalid");
+    if (!Users)
+      res.status(404).json({
+        data: { message: "Email or Password is invalid", status_code: "404" },
+      });
 
     const validPassword = await bcrypt.compare(password, Users.password);
     if (validPassword) {
@@ -60,6 +71,7 @@ const login = async (req, res) => {
           accessToken,
           refreshToken,
           message: "You are now logedin successfully",
+          status_code: "200",
         },
       });
     }
@@ -77,16 +89,17 @@ const login = async (req, res) => {
 
 const refreshSession = (req, res) => {
   const token = req.token;
-  res.status(200).json({ data: { succsss: "verifyed", token } });
+  res
+    .status(200)
+    .json({ data: { message: "verifyed", token, status_code: "200" } });
 };
 
 const logout = (req, res) => {
-  res.cookie("Oauth_token", "", {
-    expires: new Date(Date.now() + 1000),
-  });
-  res.cookie("Refresh_Token", "", {
-    expires: new Date(Date.now() + 1000),
-  });
+  res.clearCookie("OAuth_Token");
+  res.clearCookie("Refresh_Token");
+  res
+    .status(200)
+    .json({ data: { message: "Logout successfully", status_code: "200" } });
 };
 
 module.exports = {

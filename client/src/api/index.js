@@ -11,7 +11,6 @@ async function fetchAllPostApi() {
     throw new Error(getPostData.data.error);
   } catch (error) {
     console.log(error);
-    return [{}];
   }
 }
 
@@ -93,8 +92,18 @@ async function getRefreshToken() {
 }
 
 async function signOut() {
-  const res = await httpClient.get("/auth/logout").catch((error) => {});
-  return res;
+  // const res = await httpClient.get("/auth/logout").catch((error) => {});
+  // return res;
+  try {
+    const response = await fetch("http://localhost:4000/auth/logout", {
+      credentials: "include",
+    });
+    const isLogout = await response.json();
+    if (!isLogout?.data?.error) return isLogout;
+    throw new Error(isLogout.data.error);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export {

@@ -1,4 +1,5 @@
 import React from "react";
+import { useHistory } from "react-router-dom";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -23,9 +24,10 @@ export default function Header() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-  const { isLogin } = React.useContext(BlogContext);
+  const { isLogin, setIsLogin } = React.useContext(BlogContext);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const history = useHistory();
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,7 +40,12 @@ export default function Header() {
   const handleMenuClose = async () => {
     setAnchorEl(null);
     handleMobileMenuClose();
-    const res = await signOut();
+    const isLogoutSuccessResponse = await signOut();
+    if (isLogoutSuccessResponse) {
+      localStorage.clear();
+      setIsLogin(false);
+      history.push("/signin");
+    }
   };
 
   const handleMobileMenuOpen = (event) => {
