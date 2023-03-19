@@ -11,46 +11,24 @@
   box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
 }
 
-.ck .ck-content .ck-editor__editable .ck-rounded-corners .ck-editor__editable_inline .ck-blurred {
-  outline: 0 !important;
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
-}
-
-.ck-rounded-corners .ck.ck-editor__main>.ck-editor__editable, .ck.ck-editor__main>.ck-editor__editable.ck-rounded-corners {
-  outline: 0 !important;
-  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
-}
 
 html {
   outline: none !important;
-}
-
- 
-
-textarea:focus {
-  outline: 0 !important;
-}
-
-textarea:focus {
-  outline: none !important;
-}
-
-.cke_skin_kama span.cke_browser_webkit,.cke_skin_kama span.cke_browser_gecko18 {
-  outline: none !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important ;
 }
 
 body {
   margin: 0px;
   padding: 0px;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
   box-sizing: border-box;
-  background-color: #eee;
+  background-color: #f5f5f5;
   outline: none !important;
 }
 
 a {
   text-decoration: none;
-  color: #000;
+  color: 'rgb(47, 58, 178)',
 }
 
 h1,
@@ -67,12 +45,9 @@ p {
 }
 
 aside {
-  padding: 20px 20px 0px 0px;
+  padding: 8px;
 }
 
-.left-wrapper {
-  width: 240px;
-}
 
 .banner-style {
   width: 100%;
@@ -81,9 +56,19 @@ aside {
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
-.tag-wrapper {
+.tag_wrapper {
   box-sizing: border-box;
   margin: 20px 0;
+}
+
+.tag_wrapper ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+.tag_wrapper ul li {
+  padding: 8px 0;
+  list-style-type: none;
 }
 
 .tag {
@@ -91,15 +76,7 @@ aside {
   max-height: 300px;
 }
 
-.tag-wrapper ul {
-  margin: 0px;
-  padding: 0px;
-}
 
-.tag-wrapper ul li {
-  padding: 8px 0;
-  list-style-type: none;
-}
 
 .artical-action-wrapper {
   position: relative;
@@ -198,30 +175,5 @@ aside {
 }
 
 .artical-content {
-  border: 1px solid #888;
-  border-radius: 0.8rem;
   padding: 2rem;
-  height: 89vh;
-}
-
-.ck-blurred {
-  border: 1px solid red;
-}
-
-.ck-editor__main {
-  height : 52vh;
-}
-
-.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {
-  border: none;
-}
-
-.ck-rounded-corners .ck.ck-editor__top .ck-sticky-panel .ck-toolbar {
-  border: none;
-  background: none;
-}
-
-.ck-focused {
-  border: none !important;
-  height: 52vh;
 }
